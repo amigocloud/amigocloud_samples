@@ -1,8 +1,12 @@
+from requests.exceptions import HTTPError
 from amigocloud import AmigoCloud
 
-ac = AmigoCloud(username='<my_email>', password='<my_password>')
+try:
+    ac = AmigoCloud(email='<my_email>', password='<my_password>')
+except HTTPError:
+    print 'Wrong credentials!'
+    import sys
+    sys.exit(1)
 
-# print information about my account https://www.amigocloud.com/api/v1/me
-print ac.get('/me')
-
-
+# Print information about my account https://www.amigocloud.com/api/v1/me
+print ac.get('me')

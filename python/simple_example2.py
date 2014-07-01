@@ -1,48 +1,47 @@
-import urllib2
 from pprint import pprint
+from requests.exceptions import HTTPError
 from amigocloud import AmigoCloud
 
 try:
-    ac = AmigoCloud(username='<my_email>', password='<my_password>')
-except urllib2.HTTPError, e:
-    print e.code, e.msg, "Check credentials"
+    ac = AmigoCloud(email='<my_email>', password='<my_password>')
+except HTTPError:
+    print 'Wrong credentials!'
+    import sys
+    sys.exit(1)
 
 # Get User ID
-user_data = ac.get('/me')
-print 'My user_id is', user_data['id']
+user_data = ac.get('me')
+print 'My user ID is', user_data['id']
 
 # Get list of projects
-projects = ac.get('/users/{user_id}/projects'.format(user_id=user_data['id']))
+projects = ac.get(user_data['projects'])
 print 'These are my projects:'
-pprint(projects) # pretty print them since this could be very long
+pprint(projects)  # pretty print them since this could be very long
+
+# Get first project
+project = projects['results'][0]
+print 'Project ID is', project['id']
 
 # Get all datasets of the first project
-project = projects['results'][0]
-
-datasets = ac.get('/users/{user_id}/projects/{project_id}/datasets'.format(
-                        user_id=user_data['id'], project_id=project['id']))
+datasets = ac.get(project['datasets'])
 print 'These are all the datasets of my first project:'
 pprint(datasets)
 
 # Get first dataset in that project
-dataset = ac.get('/users/{user_id}/projects/{project_id}/datasets/{dataset_id}'.format(
-            user_id=user_data['id'], project_id=project['id'], dataset_id = datasets['results'][0]['id']))
+dataset = datasets['results'][0]
+print 'Dataset ID is', dataset['id']
 
-print 'This is the bounding of the first project:'
+print 'This is the bounding of the first dataset:'
 print(dataset['boundingbox'])
 
 print 'This is a url to preview the dataset as html'
 print(dataset['preview'])
 
-print 'Saving a rendered png of that dataset to disk'
+print "Saving a rendered png of that dataset to disk (output_file.png)"
 print dataset['preview_image']
 
-# get the preview image, except that since it is not json, we have to fetch the raw urllib2 response
-# and make sure that we close it after we are done
-response = ac.get_raw(dataset['preview_image'])
+# Get the preview image (response is not json, so we fetch raw response)
+response = ac.get(dataset['preview_image'], raw=True)
 
-output_file = open('output_file.png', 'w')
-output_file.write(response.read())
-
-response.close()
-output_file.close()
+with open('output_file.png', 'wb') as output_file:
+    output_file.write(response)
