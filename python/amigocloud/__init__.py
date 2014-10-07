@@ -1,1 +1,1 @@
-from .amigocloudhelper import AmigoCloudHelper as AmigoCloud
+from .amigocloud import AmigoCloud
