@@ -49,7 +49,8 @@ add_column = {
 }
 
 # Add 'log_level' column to the dataset
-response = ac.post(dataset['submit_change'], change=json.dumps(add_column))
+response = ac.post(dataset['submit_change'],
+                   {'change': json.dumps(add_column)})
 
 response = ac.get(dataset['schema'])
 
@@ -87,7 +88,8 @@ alter_column = {
 
 # Add choices or "picklist" to column 'log_level' (we need to define the entire
 # column)
-response = ac.post(dataset['submit_change'], change=json.dumps(alter_column))
+response = ac.post(dataset['submit_change'],
+                   {'change': json.dumps(alter_column)})
 
 response = ac.get(dataset['schema'])
 
@@ -113,7 +115,8 @@ drop_column = {
     ]
 }
 
-response = ac.post(dataset['submit_change'], change=json.dumps(drop_column))
+response = ac.post(dataset['submit_change'],
+                   {'change': json.dumps(drop_column)})
 
 response = ac.get(dataset['schema'])
 

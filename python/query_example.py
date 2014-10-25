@@ -47,8 +47,9 @@ response = ac.get(dataset['master'])
 master = response['master']
 
 while len(rows) < total_rows:
-    response = ac.get(sql_url, query=query, offset=offset, limit=limit,
-                      state=master, dataset_id=DATASET_ID)
+    response = ac.get(sql_url, {'query': query, 'offset': offset,
+                                'limit': limit, 'state': master,
+                                'dataset_id': DATASET_ID})
 
     if not offset:  # i.e. If first request
         print 'The schema of the result is:'
@@ -65,14 +66,14 @@ pprint(rows)
 # Update records based on some condition
 query = ("UPDATE {table} SET field1 = field1 + 1 "
          "WHERE amigo_id = 'abcd'".format(table=table_name))
-response = ac.post(sql_url, query=query)
+response = ac.post(sql_url, {'query': query})
 
 print 'Query:', response['query']
 print 'This query updated', response['count'], 'row(s)'
 
 # Delete records based on some condition
 query = "DELETE FROM {table} WHERE amigo_id = 'abcd'".format(table=table_name)
-response = ac.post(sql_url, query=query)
+response = ac.post(sql_url, {'query': query})
 
 print 'Query:', response['query']
 print 'This query deleted', response['count'], 'row(s)'
@@ -80,7 +81,7 @@ print 'This query deleted', response['count'], 'row(s)'
 # Insert new record
 query = ("INSERT INTO {table} (field1, field2) "
          "VALUES (123, 'Hello world!')".format(table=table_name))
-response = ac.post(sql_url, query=query)
+response = ac.post(sql_url, {'query': query})
 
 print 'Query:', response['query']
 print 'This query inserted', response['count'], 'row(s)'
