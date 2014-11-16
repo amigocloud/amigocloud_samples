@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-			  android:orientation="vertical"
-			  android:layout_width="match_parent"
-			  android:layout_height="match_parent"
-			  android:background="#eeeeee">
+				android:orientation="vertical"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:background="#eeeeee">
 
 	<LinearLayout
 			android:id="@+id/login_container"
@@ -53,13 +53,67 @@
 
 	</LinearLayout>
 
-	<Button
-			android:id="@+id/service_button"
+	<LinearLayout
 			android:visibility="gone"
-			android:textColor="#ffffff"
-			android:layout_width="250dp"
-			android:layout_height="80dp"
-			android:text="Start Location Broadcast"
-			android:layout_centerInParent="true"/>
+			android:id="@+id/service_container"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical"
+			android:layout_gravity="center"
+			android:layout_marginTop="10dp"
+			android:layout_marginLeft="25dp"
+			android:layout_marginRight="25dp">
+
+		<EditText
+				android:id="@+id/user_id_text"
+				android:hint="User ID"
+				android:layout_width="match_parent"
+				android:layout_height="50dp"
+				android:ems="10"
+				android:background="#ffffff"
+				android:paddingStart="10dp"
+				android:paddingLeft="10dp"
+				android:paddingEnd="10dp"
+				android:paddingRight="10dp"
+				android:layout_marginBottom="10dp"
+				android:inputType="number" />
+
+		<EditText
+				android:id="@+id/project_id_text"
+				android:hint="Project ID"
+				android:layout_width="match_parent"
+				android:layout_height="50dp"
+				android:ems="10"
+				android:background="#ffffff"
+				android:paddingStart="10dp"
+				android:paddingLeft="10dp"
+				android:paddingEnd="10dp"
+				android:paddingRight="10dp"
+				android:layout_marginBottom="10dp"
+				android:inputType="number" />
+
+		<EditText
+				android:id="@+id/dataset_id_text"
+				android:hint="Dataset ID"
+				android:layout_width="match_parent"
+				android:layout_height="50dp"
+				android:ems="10"
+				android:background="#ffffff"
+				android:paddingStart="10dp"
+				android:paddingLeft="10dp"
+				android:paddingEnd="10dp"
+				android:paddingRight="10dp"
+				android:layout_marginBottom="10dp"
+				android:inputType="number" />
+
+		<Button
+				android:id="@+id/service_button"
+				android:textColor="#ffffff"
+				android:layout_width="250dp"
+				android:layout_height="80dp"
+				android:layout_gravity="center_horizontal"
+				android:text="Start Location Broadcast"/>
+
+	</LinearLayout>
 
 </RelativeLayout>

@@ -2,6 +2,7 @@ package com.amigocloud.amigomobile.locator;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -19,11 +20,32 @@ public class LocatorActivity extends Activity {
 
 
 		final View loginContainer = findViewById(R.id.login_container);
+		final View serviceContainer = findViewById(R.id.service_container);
 		final Button serviceButton = (Button) findViewById(R.id.service_button);
+
+		if(LocationService.isRunnning()) {
+			loginContainer.setVisibility(View.GONE);
+			serviceContainer.setVisibility(View.VISIBLE);
+			serviceButton.setText("Stop Location Broadcast");
+		}
+
+		final TextView userId = (TextView) findViewById(R.id.user_id_text);
+		final TextView projectId = (TextView) findViewById(R.id.project_id_text);
+		final TextView datasetId = (TextView) findViewById(R.id.dataset_id_text);
+
 		serviceButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-
+				if(LocationService.isRunnning()) {
+					stopService(new Intent(LocatorActivity.this, LocationService.class));
+					serviceButton.setText("Start Location Broadcast");
+				} else {
+					LocationService.setIds(Long.parseLong(userId.getText().toString()),
+										   Long.parseLong(projectId.getText().toString()),
+									       Long.parseLong(datasetId.getText().toString()));
+					startService(new Intent(LocatorActivity.this, LocationService.class));
+					serviceButton.setText("Stop Location Broadcast");
+				}
 			}
 		});
 		final TextView email = (TextView) findViewById(R.id.email_text);
@@ -41,7 +63,7 @@ public class LocatorActivity extends Activity {
 							public void run() {
 								if (success) {
 									loginContainer.setVisibility(View.GONE);
-									serviceButton.setVisibility(View.VISIBLE);
+									serviceContainer.setVisibility(View.VISIBLE);
 									InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 									if(imm != null)
 										imm.hideSoftInputFromWindow(loginButton.getWindowToken(), 0);

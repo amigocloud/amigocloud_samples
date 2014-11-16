@@ -36,6 +36,10 @@ public class LocationProvider implements android.location.LocationListener {
 	private static final long MIN_TIME_GPS_UPDATES = 1000 * 5;
 	private static final long MIN_TIME_NETWORK_UPDATES = 1000 * 10;
 
+	private long userId;
+	private long projectId;
+	private long datasetId;
+
 	protected LocationManager locationManager;
 
 	private List<LocationListener> listeners = new CopyOnWriteArrayList<LocationListener>();
@@ -52,7 +56,6 @@ public class LocationProvider implements android.location.LocationListener {
 
 	public LocationProvider(Context context) {
 		this.mContext = context;
-		start();
 	}
 
 	private void updateData(Location location) {
@@ -78,7 +81,13 @@ public class LocationProvider implements android.location.LocationListener {
 
 		this.hasData = true;
 
-		//TODO: place location call here
+		final String xml = getMoovboxXML();
+		LocatorApplication.runOnNetworkThread(new Runnable() {
+			@Override
+			public void run() {
+				LocatorApplication.getRestClient().sendLocation(userId, projectId, datasetId, xml);
+			}
+		});
 
 		for(LocationListener l : listeners) {
 			l.onLocation(location);
@@ -133,7 +142,11 @@ public class LocationProvider implements android.location.LocationListener {
 		networkEnabled = false;
 	}
 
-	public synchronized void start(){
+	public synchronized void start(long userId, long projectId, long datasetId){
+		this.userId = userId;
+		this.projectId = projectId;
+		this.datasetId = datasetId;
+
 		stop();
 		running = true;
 		updateLocation();
@@ -203,6 +216,52 @@ public class LocationProvider implements android.location.LocationListener {
 
 	public void removeListener(LocationListener l) {
 		listeners.remove(l);
+	}
+
+	private String getMoovboxXML() {
+		long timestamp = System.currentTimeMillis() / 1000L;
+		String id = Settings.Secure.getString(mContext.getContentResolver() ,Settings.Secure.ANDROID_ID);
+		StringBuilder builder = new StringBuilder();
+		builder.append("<gps id=\"").append(id).append("\">");
+		builder.append("<coordinates>");
+		builder.append("<coordinate>");
+
+		builder.append("<time>");
+		builder.append(timestamp);
+		builder.append("</time>");
+
+		builder.append("<latitude>");
+		builder.append(lng);
+		builder.append("</latitude>");
+
+		builder.append("<longitude>");
+		builder.append(lat);
+		builder.append("</longitude>");
+
+		builder.append("<altitude>");
+		builder.append(altitude);
+		builder.append("</altitude>");
+
+		builder.append("<speed>");
+		builder.append(speed);
+		builder.append("</speed>");
+
+		builder.append("<bearing>");
+		builder.append(bearing);
+		builder.append("</bearing>");
+
+		builder.append("<horizontal_accuracy>");
+		builder.append(accuracy);
+		builder.append("</horizontal_accuracy>");
+
+		builder.append("<satellites>");
+		builder.append(numSatellites);
+		builder.append("</satellites>");
+
+		builder.append("</coordinate>");
+		builder.append("</coordinates>");
+		builder.append("</gps>");
+		return builder.toString();
 	}
 
 	public static void showSettingsAlert(final Context context){

@@ -7,8 +7,11 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -16,6 +19,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,7 +69,7 @@ public class AmigoRest {
 		HttpPost httppost = new HttpPost("https://www.amigocloud.com/api/v1/oauth2/access_token");
 		try {
 			// Add your data
-			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(5);
+			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
 			nameValuePairs.add(new BasicNameValuePair("client_id", CLIENT_ID));
 			nameValuePairs.add(new BasicNameValuePair("client_secret", CLIENT_SECRET));
 			nameValuePairs.add(new BasicNameValuePair("grant_type", "refresh_token"));
@@ -90,6 +94,33 @@ public class AmigoRest {
 		}
 
 		return false;
+	}
+
+	public void sendLocation(long userId, long projectId, long datasetId, String locationXml) {
+		if(token == null)
+			return;
+		HttpPost httppost = new HttpPost("https://www.amigocloud.com/api/v1/users/"+userId+
+				"/projects/"+projectId+"/datasets/"+datasetId+"/realtime");
+		try {
+			StringEntity se = new StringEntity(locationXml, HTTP.UTF_8);
+			httppost.setEntity(se);
+			httppost.setHeader("User-Agent", USER_AGENT);
+			httppost.setHeader("Authorization", "Bearer "+token.accessToken);
+			httppost.setHeader("Content-Type", "application/xml");
+			// Execute HTTP Post Request
+			HttpResponse response = httpclient.execute(httppost);
+			if(response.getStatusLine().getStatusCode() == 403) {
+				refreshToken();
+				response = httpclient.execute(httppost);
+			}
+			if(response.getStatusLine().getStatusCode() != 200)
+				System.out.println("LOCATION -- " +response.getStatusLine().getStatusCode() + ": " + EntityUtils.toString(response.getEntity()));
+
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void updateToken(HttpResponse response) throws IOException, JSONException {
