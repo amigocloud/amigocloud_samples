@@ -6,7 +6,7 @@ import android.os.IBinder;
 
 public class LocationService extends Service {
 
-    private LocationProvider provider;
+    private static LocationProvider provider;
 
 	private static boolean isRunning;
 
@@ -48,4 +48,16 @@ public class LocationService extends Service {
 	}
 
 	public static boolean isRunnning() { return isRunning; }
+
+	public static long getNumFailed() {
+		if(provider == null)
+			return 0;
+		return provider.getNumFailed();
+	}
+
+	public static long getNumSucceded() {
+		if(provider == null)
+			return 0;
+		return provider.getNumSucceded();
+	}
 }

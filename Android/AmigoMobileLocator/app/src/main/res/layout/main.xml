@@ -127,7 +127,41 @@
 				android:layout_width="250dp"
 				android:layout_height="80dp"
 				android:layout_gravity="center_horizontal"
+				android:layout_marginBottom="20dp"
 				android:text="Start Location Broadcast"/>
+
+		<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="5dp"
+				android:orientation="horizontal">
+
+			<TextView
+					android:layout_width="100dp"
+					android:layout_height="wrap_content"
+					android:text="Sucessful: "/>
+			<TextView
+					android:id="@+id/num_success_text"
+					android:text="0"
+					android:layout_width="100dp"
+					android:layout_height="wrap_content"/>
+				</LinearLayout>
+
+		<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal">
+
+			<TextView
+					android:layout_width="100dp"
+					android:layout_height="wrap_content"
+					android:text="Failed: "/>
+			<TextView
+					android:id="@+id/num_failed_text"
+					android:text="0"
+					android:layout_width="100dp"
+					android:layout_height="wrap_content"/>
+		</LinearLayout>
 
 	</LinearLayout>
 

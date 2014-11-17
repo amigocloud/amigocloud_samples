@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -13,6 +14,10 @@ import android.widget.Toast;
 
 public class LocatorActivity extends Activity {
 
+
+	private Handler handler = new Handler();
+
+	private boolean destroyed;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,10 +36,26 @@ public class LocatorActivity extends Activity {
 		}
 
 		final TextView deviceId = (TextView) findViewById(R.id.device_id_text);
-		deviceId.setText(Settings.Secure.getString(getContentResolver() ,Settings.Secure.ANDROID_ID));
+		deviceId.setText(Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
 		final TextView userId = (TextView) findViewById(R.id.user_id_text);
+		userId.setText("1");
 		final TextView projectId = (TextView) findViewById(R.id.project_id_text);
+		projectId.setText("1537");
 		final TextView datasetId = (TextView) findViewById(R.id.dataset_id_text);
+		datasetId.setText("11631");
+
+		final TextView numSucceded = (TextView) findViewById(R.id.num_success_text);
+		final TextView numFailed = (TextView) findViewById(R.id.num_failed_text);
+
+		handler.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				numSucceded.setText(LocationService.getNumSucceded()+"");
+				numFailed.setText(LocationService.getNumFailed()+"");
+				if(!destroyed)
+					handler.postDelayed(this, 1000);
+			}
+		}, 1000);
 
 		serviceButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -81,5 +102,11 @@ public class LocatorActivity extends Activity {
 				});
 			}
 		});
+	}
+
+	@Override
+	protected void onDestroy() {
+		destroyed = true;
+		super.onDestroy();
 	}
 }

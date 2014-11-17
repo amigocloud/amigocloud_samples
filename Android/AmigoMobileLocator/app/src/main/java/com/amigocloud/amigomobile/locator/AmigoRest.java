@@ -99,9 +99,9 @@ public class AmigoRest {
 		return false;
 	}
 
-	public void sendLocation(long userId, long projectId, long datasetId, String locationXml) {
+	public boolean sendLocation(long userId, long projectId, long datasetId, String locationXml) {
 		if(token == null)
-			return;
+			return false;
 		HttpPost httppost = new HttpPost("https://www.amigocloud.com/api/v1/users/"+userId+
 				"/projects/"+projectId+"/datasets/"+datasetId+"/realtime");
 		try {
@@ -116,14 +116,20 @@ public class AmigoRest {
 				refreshToken();
 				response = httpclient.execute(httppost);
 			}
-			if(response.getStatusLine().getStatusCode() != 200)
-				System.out.println("LOCATION -- " +response.getStatusLine().getStatusCode() + ": " + EntityUtils.toString(response.getEntity()));
+			boolean ret = true;
+			if(response.getStatusLine().getStatusCode() != 200) {
+				ret = false;
+				System.out.println("LOCATION -- " + response.getStatusLine().getStatusCode() + ": " + EntityUtils.toString(response.getEntity()));
+			}
 			response.getEntity().consumeContent();
+			return ret;
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		return false;
 	}
 
 	private void updateToken(HttpResponse response) throws IOException, JSONException {

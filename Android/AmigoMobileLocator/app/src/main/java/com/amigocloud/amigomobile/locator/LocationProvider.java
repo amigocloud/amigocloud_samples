@@ -41,6 +41,12 @@ public class LocationProvider implements android.location.LocationListener {
 	private long projectId;
 	private long datasetId;
 
+	private long numSucceded;
+	private long numFailed;
+
+	public long getNumFailed() { return numFailed; }
+	public long getNumSucceded() { return numSucceded; }
+
 	protected LocationManager locationManager;
 
 	private List<LocationListener> listeners = new CopyOnWriteArrayList<LocationListener>();
@@ -86,7 +92,10 @@ public class LocationProvider implements android.location.LocationListener {
 		LocatorApplication.runOnNetworkThread(new Runnable() {
 			@Override
 			public void run() {
-				LocatorApplication.getRestClient().sendLocation(userId, projectId, datasetId, xml);
+				if(LocatorApplication.getRestClient().sendLocation(userId, projectId, datasetId, xml))
+					numSucceded++;
+				else
+					numFailed++;
 			}
 		});
 
@@ -144,6 +153,9 @@ public class LocationProvider implements android.location.LocationListener {
 	}
 
 	public synchronized void start(String deviceId, long userId, long projectId, long datasetId){
+		numSucceded = 0;
+		numFailed = 0;
+
 		this.deviceId = deviceId;
 		this.userId = userId;
 		this.projectId = projectId;
