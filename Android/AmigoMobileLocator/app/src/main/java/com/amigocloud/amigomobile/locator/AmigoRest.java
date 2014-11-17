@@ -49,9 +49,10 @@ public class AmigoRest {
 			if(response.getStatusLine().getStatusCode() == 200)
 			{
 				updateToken(response);
+				response.getEntity().consumeContent();
 				return true;
 			}
-
+			response.getEntity().consumeContent();
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -82,8 +83,10 @@ public class AmigoRest {
 			if(response.getStatusLine().getStatusCode() == 200)
 			{
 				updateToken(response);
+				response.getEntity().consumeContent();
 				return true;
 			}
+			response.getEntity().consumeContent();
 
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
@@ -115,7 +118,7 @@ public class AmigoRest {
 			}
 			if(response.getStatusLine().getStatusCode() != 200)
 				System.out.println("LOCATION -- " +response.getStatusLine().getStatusCode() + ": " + EntityUtils.toString(response.getEntity()));
-
+			response.getEntity().consumeContent();
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

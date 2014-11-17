@@ -32,9 +32,9 @@ public class LocationProvider implements android.location.LocationListener {
 	private boolean running;
 
 	private static final int UPDATE_MSG = 0;
-	private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 5;
-	private static final long MIN_TIME_GPS_UPDATES = 1000 * 5;
-	private static final long MIN_TIME_NETWORK_UPDATES = 1000 * 10;
+	private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 0;
+	private static final long MIN_TIME_GPS_UPDATES = 500;
+	private static final long MIN_TIME_NETWORK_UPDATES = 1000 * 5;
 
 	private String deviceId;
 	private long userId;
