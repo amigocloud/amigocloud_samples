@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -29,6 +30,8 @@ public class LocatorActivity extends Activity {
 			serviceButton.setText("Stop Location Broadcast");
 		}
 
+		final TextView deviceId = (TextView) findViewById(R.id.device_id_text);
+		deviceId.setText(Settings.Secure.getString(getContentResolver() ,Settings.Secure.ANDROID_ID));
 		final TextView userId = (TextView) findViewById(R.id.user_id_text);
 		final TextView projectId = (TextView) findViewById(R.id.project_id_text);
 		final TextView datasetId = (TextView) findViewById(R.id.dataset_id_text);
@@ -40,7 +43,8 @@ public class LocatorActivity extends Activity {
 					stopService(new Intent(LocatorActivity.this, LocationService.class));
 					serviceButton.setText("Start Location Broadcast");
 				} else {
-					LocationService.setIds(Long.parseLong(userId.getText().toString()),
+					LocationService.setIds(deviceId.getText().toString(),
+										   Long.parseLong(userId.getText().toString()),
 										   Long.parseLong(projectId.getText().toString()),
 									       Long.parseLong(datasetId.getText().toString()));
 					startService(new Intent(LocatorActivity.this, LocationService.class));

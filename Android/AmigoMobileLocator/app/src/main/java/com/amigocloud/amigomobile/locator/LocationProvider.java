@@ -36,6 +36,7 @@ public class LocationProvider implements android.location.LocationListener {
 	private static final long MIN_TIME_GPS_UPDATES = 1000 * 5;
 	private static final long MIN_TIME_NETWORK_UPDATES = 1000 * 10;
 
+	private String deviceId;
 	private long userId;
 	private long projectId;
 	private long datasetId;
@@ -142,7 +143,8 @@ public class LocationProvider implements android.location.LocationListener {
 		networkEnabled = false;
 	}
 
-	public synchronized void start(long userId, long projectId, long datasetId){
+	public synchronized void start(String deviceId, long userId, long projectId, long datasetId){
+		this.deviceId = deviceId;
 		this.userId = userId;
 		this.projectId = projectId;
 		this.datasetId = datasetId;
@@ -220,9 +222,8 @@ public class LocationProvider implements android.location.LocationListener {
 
 	private String getMoovboxXML() {
 		long timestamp = System.currentTimeMillis() / 1000L;
-		String id = Settings.Secure.getString(mContext.getContentResolver() ,Settings.Secure.ANDROID_ID);
 		StringBuilder builder = new StringBuilder();
-		builder.append("<gps id=\"").append(id).append("\">");
+		builder.append("<gps id=\"").append(deviceId).append("\">");
 		builder.append("<coordinates>");
 		builder.append("<coordinate>");
 

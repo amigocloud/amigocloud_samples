@@ -10,6 +10,7 @@ public class LocationService extends Service {
 
 	private static boolean isRunning;
 
+	private static String deviceId;
 	private static long userId;
 	private static long projectId;
 	private static long datasetId;
@@ -28,7 +29,7 @@ public class LocationService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 		isRunning = true;
-        provider.start(userId, projectId, datasetId);
+        provider.start(deviceId, userId, projectId, datasetId);
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -39,7 +40,8 @@ public class LocationService extends Service {
 		isRunning = false;
     }
 
-	public static void setIds(long uId, long pId, long dId) {
+	public static void setIds(String devId, long uId, long pId, long dId) {
+		deviceId = devId;
 		userId = uId;
 		projectId = pId;
 		datasetId = dId;
