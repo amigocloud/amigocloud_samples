@@ -4,8 +4,9 @@ import random
 import time
 from amigocloud import AmigoCloud
 
-AMIGOCLOUD_EMAIL = 'my@email.com'  # Your email here
-AMIGOCLOUD_PASSWORD = 'mypassword'  # Yor password here
+# Use amigocloud version 1.0.5 or higher to login with tokens
+AMIGOCLOUD_TOKEN = '<your_token>'  # Your token here
+
 AMIGOCLOUD_USER_ID = 0  # Your user id here
 AMIGOCLOUD_PROJECT_ID = 0  # The project id here
 AMIGOCLOUD_REALTIME_DATASET_ID = 0  # The dataset id here
@@ -13,8 +14,7 @@ AMIGOCLOUD_REALTIME_DATASET_ID = 0  # The dataset id here
 
 def simulate(nr_buses=10):
 
-    ac = AmigoCloud()
-    ac.login(AMIGOCLOUD_EMAIL, AMIGOCLOUD_PASSWORD)
+    ac = AmigoCloud(AMIGOCLOUD_TOKEN)
 
     url = 'users/%s/projects/%s/datasets/%s/realtime' % (
         AMIGOCLOUD_USER_ID, AMIGOCLOUD_PROJECT_ID,

@@ -1,14 +1,10 @@
 import json
 from pprint import pprint
-from requests.exceptions import HTTPError
 from amigocloud import AmigoCloud
 
-try:
-    ac = AmigoCloud(email='<my_email>', password='<my_password>')
-except HTTPError:
-    print 'Wrong credentials!'
-    import sys
-    sys.exit(1)
+# Use amigocloud version 1.0.5 or higher to login with tokens
+# This will raise an AmigoCloudError if the token is invalid or has expired
+ac = AmigoCloud(token='A:qYndM98UP0oNL2fMH0uV1tlBvSDK75QcngMfwM')
 
 # For examples of how to get these values, see simple_example2.py
 PROJECT_OWNER = 1
