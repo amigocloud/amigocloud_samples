@@ -4,7 +4,7 @@ from amigocloud import AmigoCloud
 
 # Use amigocloud version 1.0.5 or higher to login with tokens
 # This will raise an AmigoCloudError if the token is invalid or has expired
-ac = AmigoCloud(token='A:qYndM98UP0oNL2fMH0uV1tlBvSDK75QcngMfwM')
+ac = AmigoCloud(token='<your_token>')
 
 # For examples of how to get these values, see simple_example2.py
 PROJECT_OWNER = 1
