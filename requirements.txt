@@ -1,2 +1,2 @@
-requests==1.2.0
-socketIO-client==0.5.3
+requests
+socketIO-client
