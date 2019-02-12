@@ -16,26 +16,35 @@ COMPONENTS = 'country:US'
 geocoder_url = 'https://app.amigocloud.com/api/v2/me/geocoder/search'
 geocoder_params = {'input': ADDRESS, 'components': COMPONENTS}
 
-response = ac.get(geocoder_url, params=geocoder_params)
+geocoder_result = ac.get(geocoder_url, params=geocoder_params)
 
 coordinates = {}
 # Status 'OK' indicates that no errors occurred; the address was successfully
 # parsed and at least one geocode was returned.
-if response['status'] == 200:
-    coordinates['lat'] = response['results'][0]['location']['lat']
-    coordinates['lng'] = response['results'][0]['location']['lng']
+if geocoder_result['status'] == 'OK':
+    lat = geocoder_result['results'][0]['geometry']['location']['lat']
+    lng = geocoder_result['results'][0]['geometry']['location']['lng']
 
-# We can use these coordinates to find intersects in polygons
-PROJECT_ID = 1234
-DATASET_ID = 5678
-POLYGON_GEOMETRY_FIELD_NAME = 'polygon'
-sql_url = 'projects/{project_id}/sql'.format(project_id=PROJECT_ID)
-query = """
-        SELECT * 
-        FROM dataset_{dataset_id} 
-        WHERE ST_Intersects({geometry_field}, 
-        ST_PointFromText('POINT({coordinate_lng} {coordinate_lat})', 4326))
-        """.format(dataset_id=DATASET_ID,
-                   geometry_field=POLYGON_GEOMETRY_FIELD_NAME,
-                   coordinate_lng=str(coordinates['lng']),
-                   coordinate_lat=str(coordinates['lat']))
+    # We can use these coordinates to find intersects in our polygons
+    PROJECT_ID = 1234
+    DATASET_ID = 5678
+    POLYGON_GEOMETRY_FIELD_NAME = 'polygon'
+
+    # Project SQL endpoint
+    project_sql_url = 'projects/{project_id}/sql'.format(project_id=PROJECT_ID)
+    query = """
+            SELECT * 
+            FROM dataset_{dataset_id} 
+            WHERE ST_Intersects({geometry_field}, 
+            ST_PointFromText('POINT({coordinate_lng} {coordinate_lat})', 4326))
+            """.format(dataset_id=DATASET_ID,
+                       geometry_field=POLYGON_GEOMETRY_FIELD_NAME,
+                       coordinate_lng=str(lng),
+                       coordinate_lat=str(lat))
+
+    query_result = ac.get(project_sql_url, {'query': query})
+
+    if query_result['count'] == 0:
+        print('No intersect!')
+    else:
+        print('Intersect!')
