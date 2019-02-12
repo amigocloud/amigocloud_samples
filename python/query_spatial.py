@@ -6,14 +6,11 @@ from amigocloud import AmigoCloud
 ac = AmigoCloud(token='<your token>')
 
 # For examples of how to get these values, see simple_example2.py
-PROJECT_OWNER = 1
 PROJECT_ID = 14098
 DATASET_ID = 84746
 
 #API endpoint
-sql_url = '/users/{user_id}/projects/{project_id}/sql'.format(
-    user_id=PROJECT_OWNER, project_id=PROJECT_ID
-)
+sql_url = 'projects/{project_id}/sql'.format(project_id=PROJECT_ID)
 
 # find all rows that intersect the hard coded point
 query = """
