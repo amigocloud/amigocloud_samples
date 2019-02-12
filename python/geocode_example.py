@@ -19,7 +19,6 @@ geocoder_params = {'input': ADDRESS, 'components': COMPONENTS}
 
 geocoder_result = ac.get(geocoder_url, params=geocoder_params)
 
-coordinates = {}
 # Status 'OK' indicates that no errors occurred; the address was successfully
 # parsed and at least one geocode was returned.
 if geocoder_result['status'] == 'OK':
