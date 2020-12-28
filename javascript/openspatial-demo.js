@@ -5,13 +5,14 @@ import FormData from 'form-data'
 import { waitForJob, getFirstMap } from './helpers.js'
 
 // Required constant values from the user
-const API_TOKEN = 'A:CzjSMcgMZil54agXnwo2msoNqhQklNGZh6bUyt'
-const ORGANIZATION_UUID = '9820f3db-7745-4c46-98ba-8824363e07db'
-const PROJECT_UUID = 'bd69dcb4-2d78-4c7b-9f7c-a5898cc95da7'
-const USER_UUID = '6df02d58-8765-411f-bc82-5ca7e369ed7c'
-const FILE_PATH = './Parks.zip'
+const API_TOKEN = ''
+const USER_UUID = ''
+const ORGANIZATION_UUID = ''
+const PROJECT_UUID = ''
+const BASE_URL = ''
 
-const BASE_URL = 'http://localhost'
+
+const FILE_PATH = './Parks.zip'
 const TOOLS_URL = `${BASE_URL}/api/v2/tools/run?token=${API_TOKEN}`
 const JOBS_BASE_URL = `${BASE_URL}/api/v1/me/jobs`
 
@@ -91,6 +92,10 @@ const openspatial_demo = async () => {
   clonedMap = await getFirstMap(BASE_URL, clonedProjectUUID, API_TOKEN)
   console.log('Area of Interest:', clonedMap.boundingbox)
   console.log('View:', clonedMap.view)
+}
+
+if ([API_TOKEN, ORGANIZATION_UUID, PROJECT_UUID, USER_UUID, BASE_URL].includes('')) {
+  throw 'Some of the required user data is not present'
 }
 
 openspatial_demo()
