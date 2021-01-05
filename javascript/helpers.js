@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export const waitForJob = async (jobId, jobsBaseUrl, API_TOKEN) => {
-  console.log('Waiting for job with id', jobId, 'using token', API_TOKEN)
+  console.log('Waiting for job with id:', jobId)
   let result = {
     status: null
   }
@@ -11,9 +11,11 @@ export const waitForJob = async (jobId, jobsBaseUrl, API_TOKEN) => {
       const rawResult = await axios.get(`${jobsBaseUrl}/${jobId}?token=${API_TOKEN}`)
       result = rawResult.data
     }
-    catch(err) {
-      console.log(err.response ? err.response.data : err)
-      return false
+    catch(error) {
+      if (error.response) {
+        return error.response.data
+      }
+      throw error
     }
     await new Promise(resolve => setTimeout(resolve, 1000)) // Wait for a second before checking again
   }
@@ -23,10 +25,15 @@ export const waitForJob = async (jobId, jobsBaseUrl, API_TOKEN) => {
 
 export const getFirstMap = async (BASE_URL, PROJECT_UUID, API_TOKEN) => {
   const MAPS_URL = `${BASE_URL}/api/v1/projects/${PROJECT_UUID}/maps?token=${API_TOKEN}`
-  const mapsRaw = await axios.get(MAPS_URL)
-  const map = mapsRaw.data.results[0]
+  try {
+    const mapsRaw = await axios.get(MAPS_URL)
+    return mapsRaw.data.results[0]
+  } catch(error) {
+    if (error.response) {
+      return error.response.data
+    }
 
-  if (!Boolean(map)) throw 'No map found. Create one in the original dataset'
-
-  return map
+    throw error
+  }
+  
 }

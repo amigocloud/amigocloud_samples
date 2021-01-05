@@ -29,28 +29,51 @@ const openspatial_demo = async () => {
   console.log('For initial map')
   const initialMap = await getFirstMap(BASE_URL, PROJECT_UUID, API_TOKEN)
 
+  if(!Boolean(initialMap)) {
+    throw 'No map found. Create one in the initial dataset'
+  }
+
+  if (initialMap.error_code) {
+    throw `Initial map response error: ${initialMap.detail}`
+  }
+
   console.log('Area of Interest:', initialMap.boundingbox)
   console.log('View:', initialMap.view)
 
   // 2. Clone Project "OpenSpatial Demo"
+  console.log('Cloning...')
 
-  const cloneResult = await axios.post(
-    // Endpoint
-    TOOLS_URL,
-    // Request body
-    {
-      tool_name: 'clone_project',
-      tool_input: TOOL_INPUT,
-      organization_uuid: ORGANIZATION_UUID
+  let cloneResult
+  try {
+    cloneResult = await axios.post(
+      // Endpoint
+      TOOLS_URL,
+      // Request body
+      {
+        tool_name: 'clone_project',
+        tool_input: TOOL_INPUT,
+        organization_uuid: ORGANIZATION_UUID
+      }
+    )
+  } catch (error) {
+    if (error.response) {
+      console.log(error.response)
+      throw 'Error cloning project. See details above'
     }
-  )
+    throw error
+  } 
 
   const cloneJobId = cloneResult.data.job_id
 
-  console.log('Cloning...')
   const jobResult = await waitForJob(cloneJobId, JOBS_BASE_URL, API_TOKEN)
 
-  if (!Boolean(jobResult) || jobResult.status === 'FAILURE') throw 'Error while polling clone job'
+  if (jobResult.error_code) {
+    throw `Error polling clone job: ${jobResult.detail}`
+  }
+
+  if (jobResult.status === 'FAILURE') {
+    throw `Cloning job resulted in FAILURE. Check details here: ${jobResult.url}`
+  }
 
   const clonedProjectUUID = jobResult.extra.output.cloned_project_uuid
   const uploadToClonedProjectUrl = `${BASE_URL}/api/v1/projects/${clonedProjectUUID}/datasets/upload?token=${API_TOKEN}`
@@ -66,30 +89,54 @@ const openspatial_demo = async () => {
   uploadFormData.append('csv_props.delimiter', ',')
   uploadFormData.append('csv_props.decimal_separator', '.')
 
+  console.log('Uploading overwrite file...')
+
   let uploadResult
   try {
     uploadResult = await axios.post(uploadToClonedProjectUrl, uploadFormData, { headers: formHeaders })
   } catch (error) {
-    console.log(error.response ? error.response.data : error)
+    if (error.response) {
+      console.log(error.response)
+      throw 'Error uploading new dataset file. See details above'
+    }
+    throw error
   }
 
-  if (!Boolean(uploadResult)) throw 'Error while uploading new dataset file'
-
-  console.log('Uploading overwrite file...')
   const uploadResultJobId = uploadResult.data.job
   const uploadJobResult = await waitForJob(uploadResultJobId, JOBS_BASE_URL, API_TOKEN)
 
-  if (!Boolean(uploadJobResult) || jobResult.status === 'FAILURE') throw 'Error while polling upload job'
+  if (uploadJobResult.error_code) {
+    throw `Error polling upload job: ${uploadJobResult.detail}`
+  }
 
+  if (uploadJobResult.status === 'FAILURE') {
+    throw `Upload job resulted in FAILURE. Check details here: ${uploadJobResult.url}`
+  }
   
+  // 4. Check new Area of Interest
   console.log('For overwritten map')
   let clonedMap = await getFirstMap(BASE_URL, clonedProjectUUID, API_TOKEN)
 
-  // Clear the map's cache so the AOI is correctly updated
-  await axios.post(`${clonedMap.purge_cache}?token=${API_TOKEN}`, {})
+  if (clonedMap.error_code) {
+    throw `Cloned map response error: ${clonedMap.detail}`
+  }
 
-  // 4. Check new Area of Interest
+  // Clear the map's cache so the AOI is correctly updated
+  try {
+    await axios.post(`${clonedMap.purge_cache}?token=${API_TOKEN}`, {})
+  } catch (error) {
+    if (error.response) {
+      console.log(error.response.data)
+      throw 'Error purging cache. See details above.'
+    }
+  }
+
   clonedMap = await getFirstMap(BASE_URL, clonedProjectUUID, API_TOKEN)
+
+  if (clonedMap.error_code) {
+    throw `Cloned map response error: ${clonedMap.detail}`
+  }
+
   console.log('Area of Interest:', clonedMap.boundingbox)
   console.log('View:', clonedMap.view)
 }
