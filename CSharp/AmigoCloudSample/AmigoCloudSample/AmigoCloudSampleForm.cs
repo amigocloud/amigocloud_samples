@@ -38,7 +38,7 @@ namespace AmigoCloudSample
 
             // Login
 
-            Uri amigoCloudServer = new Uri("https://www.amigocloud.com/api/v1/");
+            Uri amigoCloudServer = new Uri("https://app.amigocloud.com/api/v1/");
             string clientId = "510cf3891778c5f6587e";
             string clientSecret = "f59e18e727c84c6ed108e59bc519fdbcfd07ecbb";
 
