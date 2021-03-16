@@ -5,7 +5,7 @@ from amigocloud import AmigoCloud
 import csv
 
 # AmigoCloud variables - change based on user
-#   token found at www.amigocloud.com/accounts/tokens
+#   token found at app.amigocloud.com/accounts/tokens
 #   project owner = user id found in /api/v1/me
 amigocloud = AmigoCloud(token='<>')
 projectOwner = <>
@@ -22,7 +22,7 @@ while True:
         projectNum.append(project['id'])
         projID = project['id']
         datasets = amigocloud.get('users/%s/projects/%s/datasets' % (projectOwner,projID))
-        for rh in datasets['results']: #parse throgh datasets
+        for rh in datasets['results']: #parse throughh datasets
             if rh['name'] == 'record_history': #if the dataset is called record_history append to recordNum list
                 recordNum.append(rh['id'])
                 projectsNext = projects['next']

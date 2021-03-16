@@ -13,7 +13,7 @@ amigocloud = AmigoCloud(token='<YOUR API TOKEN>')
 def get_data_frame( amigocloud: AmigoCloud, project: str, dataset: str) -> pd.DataFrame:
 
     dataset_rows = amigocloud.get_cursor(
-        'https://www.amigocloud.com/api/v1/projects/{project_id}/sql'.format(project_id=project),
+        'https://app.amigocloud.com/api/v1/projects/{project_id}/sql'.format(project_id=project),
         {
             'query': 'select * from dataset_{dataset_id}'.format(dataset_id=dataset)
         })

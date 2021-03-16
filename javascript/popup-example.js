@@ -6,7 +6,7 @@ L.amigo.auth.setToken('R:hlmpQ33KameDSQqiseMAlgLjdlpGMrStsmbnhH');
 // the overrideCallback option and passing it a callback similar to the one
 // passed to additionalCallback.
 map.addDatasetLayer({
-    url: 'https://www.amigocloud.com/api/v1/users/23/projects/3386/datasets/26051',
+    url: 'https://app.amigocloud.com/api/v1/users/23/projects/3386/datasets/26051',
     popup: {
         popupTitle: 'last_name',
         className: 'custom-popup-whatever',

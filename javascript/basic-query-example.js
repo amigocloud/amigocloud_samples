@@ -2,7 +2,7 @@ DATASET_ID = 34109
 PROJECT_ID = 208
 OWNER_ID = 329
 
-// get access token from https://www.amigocloud.com/accounts/tokens/
+// get access token from https://app.amigocloud.com/accounts/tokens/
 ACCESS_TOKEN = 'R:XXXXX...'
 
 async function getContainedRows (lat, lng, radius) {
@@ -19,7 +19,7 @@ async function getContainedRows (lat, lng, radius) {
         ${radius}
       )`
 
-  const endpoint = `https://www.amigocloud.com/api/v1/users/${OWNER_ID}/projects/${PROJECT_ID}/sql`
+  const endpoint = `https://app.amigocloud.com/api/v1/users/${OWNER_ID}/projects/${PROJECT_ID}/sql`
 
   fetch(endpoint, {
     method: 'GET',

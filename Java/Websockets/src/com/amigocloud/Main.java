@@ -5,16 +5,16 @@ import java.util.Timer;
 
 public class Main {
 
-    // The API_TOKEN should be generated here: https://www.amigocloud.com/accounts/tokens
+    // The API_TOKEN should be generated here: https://app.amigocloud.com/accounts/tokens
     private static final String API_TOKEN = "<token>";
 
-    // User ID can be found here: https://www.amigocloud.com/api/v1/me
+    // User ID can be found here: https://app.amigocloud.com/api/v1/me
     private static long userID = 0;
     private static long projectID = 0;
     private static long datasetID = 0;
 
-    // Can be found here: https://www.amigocloud.com/api/v1/settings
-    private static String url = "https://www.amigocloud.com";
+    // Can be found here: https://app.amigocloud.com/api/v1/settings
+    private static String url = "https://app.amigocloud.com";
     private static String path = "/v2_socket.io";
 
     private static AmigoWebsocketListener listener = new AmigoWebsocketListener() {

@@ -43,7 +43,7 @@ public class AmigoRest {
 	private static final String CLIENT_SECRET = "d4235bc6fd279ad93e3afc4f53d650c820d1b97f";
 
 	public boolean login(String email, String password) {
-		HttpPost httppost = new HttpPost("https://www.amigocloud.com/api/v1/oauth2/access_token");
+		HttpPost httppost = new HttpPost("https://app.amigocloud.com/api/v1/oauth2/access_token");
 		try {
 			// Add your data
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(5);
@@ -78,7 +78,7 @@ public class AmigoRest {
 	public boolean refreshToken() {
 		if(token == null)
 			return false;
-		HttpPost httppost = new HttpPost("https://www.amigocloud.com/api/v1/oauth2/access_token");
+		HttpPost httppost = new HttpPost("https://app.amigocloud.com/api/v1/oauth2/access_token");
 		try {
 			// Add your data
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
@@ -113,7 +113,7 @@ public class AmigoRest {
 	public boolean sendLocation(long userId, long projectId, long datasetId, String locationXml) {
 		if(token == null)
 			return false;
-		HttpPost httppost = new HttpPost("https://www.amigocloud.com/api/v1/users/"+userId+
+		HttpPost httppost = new HttpPost("https://app.amigocloud.com/api/v1/users/"+userId+
 				"/projects/"+projectId+"/datasets/"+datasetId+"/realtime");
 		try {
 			StringEntity se = new StringEntity(locationXml, HTTP.UTF_8);
