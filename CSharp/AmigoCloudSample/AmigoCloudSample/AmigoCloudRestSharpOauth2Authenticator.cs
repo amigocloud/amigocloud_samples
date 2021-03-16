@@ -36,7 +36,6 @@ namespace AmigoCloudSample
             {
                 request.AddHeader("Authorization", "Bearer " + base.AccessToken);
             }
-            // curl --header "Authorization: Bearer tDmfUNoKehyiIH2JK2inUCySzM8AWu" http://qa-amigocloud.urbanfootprint.net/footprint/amigocloud/gptool_data/
 
 
         }
