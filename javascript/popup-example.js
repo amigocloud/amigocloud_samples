@@ -1,4 +1,4 @@
-L.amigo.auth.setToken('R:hlmpQ33KameDSQqiseMAlgLjdlpGMrStsmbnhH');
+L.amigo.auth.setToken('{replace with your API Token}');
 
 // This dataset layer will have default popup behavior and an additional callback
 // to handle some custom behavior after showing the popup.
@@ -6,11 +6,11 @@ L.amigo.auth.setToken('R:hlmpQ33KameDSQqiseMAlgLjdlpGMrStsmbnhH');
 // the overrideCallback option and passing it a callback similar to the one
 // passed to additionalCallback.
 map.addDatasetLayer({
-    url: 'https://app.amigocloud.com/api/v1/users/23/projects/3386/datasets/26051',
+    url: 'https://app.amigocloud.com/api/v1/users/{user_id}/projects/{project_id}/datasets/{dataset_id}',
     popup: {
-        popupTitle: 'last_name',
+        popupTitle: '{field_in_dataset}',
         className: 'custom-popup-whatever',
-        displayFields: ['first_name', 'last_name', 'age', 'gender', 'race'],
+        displayFields: ['{popup_title_field_in_dataset}', '{another_field_for_popup}'],
         additionalCallback: function (e, map) {
             if (e.data) {
                 $('#redundancy').html('Looking at ' + e.data.amigo_id);
